@@ -1,0 +1,24 @@
+{
+  "name": "reactfront",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "ajv": "^6.4.0",
+    "axios": "^0.18.0",
+    "bootstrap": "^3.3.7",
+    "jquery": "^3.3.1",
+    "popper.js": "^1.14.3",
+    "react": "^15.3.0",
+    "react-bootstrap": "^0.32.1",
+    "react-dom": "^15.3.0",
+    "react-file-download": "^0.3.5",
+    "react-scripts": "1.1.4",
+    "react-router": "^3.0.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
