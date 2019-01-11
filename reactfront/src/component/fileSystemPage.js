@@ -13,26 +13,10 @@ class FileSystemPage extends Component {
       currentDir: '',
       fileList : [],
       homeDir: '',
-      modalStatus:'none', // 'none' -> 'set' -> 'sent' -> 'result'
-      modalTitleMessage:'',
-      scpUser:'root',
-      scpPassword: 'Good4now!',
-      scpIp:'',
-      remotePath: '',
-      scpFromPath:'',
-      modalMessage:'',
     };
     this.fetchFileList = this.fetchFileList.bind(this);
     this.getHomeDir = this.getHomeDir.bind(this);
-    this.scpFileTo = this.scpFileTo.bind(this);
-    this.changeScpUser = this.changeScpUser.bind(this);
-    this.changeScpPassword = this.changeScpPassword.bind(this);
-    this.changeScpIp = this.changeScpIp.bind(this);
-    this.changeRemotePath = this.changeRemotePath.bind(this);
-    this.closeModal = this.closeModal.bind(this);
-    this.openModal = this.openModal.bind(this);
-    this.openScpToModal = this.openScpToModal.bind(this);
-    this.validateForm = this.validateForm.bind(this);
+    this.launchPlayer = this.launchPlayer.bind(this);
   }
   componentDidMount(){
     this.getHomeDir();
@@ -43,7 +27,6 @@ class FileSystemPage extends Component {
   getHomeDir(){
     axios.get(`${hostIp}/listPath/home`)
     .then(res => {
-      console.log(res);
       const fileList = _.orderBy(res.data.files,['isDirectory'],['desc', 'asc']);
       this.setState({
         fileList: fileList, 
@@ -65,111 +48,14 @@ class FileSystemPage extends Component {
       console.log("error in init")
     });
   }
-  scpFileTo(){
-    this.setState({
-      modalStatus: 'sent',
-      modalTitleMessage: `Transporting ...`
-    });
-    const config = {
-      "fromPath": this.state.scpFromPath,
-      "toPath": this.state.remotePath,
-      "user": this.state.scpUser,
-      "password":this.state.scpPassword,
-      "clusterIp": this.state.scpIp
-    };
-    axios.post(`${hostIp}/v1/scpTo`, config)
-    .then(res =>{
-      this.setState({
-        modalStatus:'result',
-      })
-      if(res.data.success){
-        this.setState({
-          modalTitleMessage: "Succeed!",
-          modalMessage: res.data.message,
-        })
-      }
-      else{
-        this.setState({
-          modalTitleMessage: "Failed!",
-          modalMessage: res.data.message,
-        })
-      }
-    })
-    .catch(error =>{
-      console.log(error.message);
-      this.setState({
-        modalStatus:'result',
-        modalTitleMessage: "Failed!",
-        modalMessage: error.message,
-      });
-    });
-  }
-  openModal(){
-    this.setState({
-      modalStatus:'set',
-    });
-  }
-  openScpToModal(options){
-    this.openModal()
-    this.setState({
-      modalTitleMessage: `SCP ${options.fromPath} To:`,
-      scpFromPath: options.fromPath
-    });
-  }
-  changeScpUser(e){
-    this.setState({ scpUser: e.target.value });
-  }
-  changeScpPassword(e){
-    this.setState({ scpPassword: e.target.value });
-  }
-  changeScpIp(e){
-    this.setState({ scpIp: e.target.value });
-  }
-  changeRemotePath(e){
-    this.setState({ remotePath: e.target.value });
-  }
-  closeModal(){
-    this.setState({
-      scpUser: 'root',
-      scpPassword: 'Good4now!',
-      scpIp:'',
-      remotePath: '',
-      modalStatus: 'none',
-      scpFromPath:'',
-      modalMessage:'',
-    })
-  }
-  validateForm(){
-    return !(this.state.scpUser&&this.state.scpPassword&&
-      this.state.scpIp&&this.state.remotePath&&this.state.scpFromPath);
+  launchPlayer(fullPath){
+    var url = `#/video/${encodeURIComponent(fullPath)}`
+    window.open(url);
   }
   render(){
     let that=this;
     return(
       <div>
-        <Modal show={this.state.modalStatus!=='none'}>
-          <Modal.Header>
-            <Modal.Title>{this.state.modalTitleMessage}</Modal.Title>
-          </Modal.Header>
-
-          <Modal.Body>
-            {this.state.modalStatus==='sent'&& <div>
-            <p> Transporting </p>
-            <p> {this.state.scpFromPath}</p>
-            <p> to </p>
-            <p>{`${this.state.scpUser}@${this.state.scpIp}:${this.state.remotePath}`}</p>
-            </div>}
-            {this.state.modalStatus==='result'&&<div>
-              <p>{this.state.modalMessage}</p>
-            </div>}
-          </Modal.Body>
-
-          <Modal.Footer>
-            {this.state.modalStatus==='set'&&<Button onClick={that.closeModal}>Cancel</Button>}
-            {this.state.modalStatus==='set' &&<Button bsStyle="primary" onClick={that.scpFileTo} disabled={that.validateForm()}>Start</Button>}
-            {['sent','result'].indexOf(this.state.modalStatus)>-1&& <Button bsStyle="primary" onClick={that.closeModal} disabled={this.state.modalStatus!=='result'}>Close</Button>}
-          </Modal.Footer>
-        </Modal>
         <div id='homeBar' style={{color:'blue', height:'20px', margin:'50px'}}>
         <Navbar>
           <Navbar.Header>
@@ -206,7 +92,7 @@ class FileSystemPage extends Component {
                         ikey={i}
                         fetchFileList={that.fetchFileList}
                         currentDir={that.state.currentDir}
-                        openScpToModal={that.openScpToModal}
+                        launchPlayer={that.launchPlayer}
                       />);
             })}
           </tbody>
