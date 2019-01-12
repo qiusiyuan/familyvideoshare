@@ -2,7 +2,7 @@ var app = require('express')();
 var http = require('http').Server(app);
 var fs = require('fs');
 var handler = require('./controllers/handler');
-
+var path = require('path')
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -10,12 +10,15 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.get('/', function(req, res){
-  res.sendFile(__dirname + '/video.html');
-});
-
 app.get('/listPath/:fullpath', handler.listPath);
 
+app.get('/icon',function(req, res){
+  var picpath = path.join(__dirname , "/pics");
+  fs.readdir(picpath, (err, files)=>{
+    file = files[Math.floor(Math.random() * files.length)]
+    return res.sendFile(path.join(picpath, file));
+  });
+})
 app.get('/video/:videopath', function(req, res) {
   const path = req.params.videopath;
   const stat = fs.statSync(path);

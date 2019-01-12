@@ -27,7 +27,6 @@ function listPath(req, res){
       const returnVal = result.filter(obj => {
         return Object.keys(obj).length !== 0;
       });
-      console.log(returnVal);
       res.json({
         success: true,
         currentDirectory : options.filePath,
