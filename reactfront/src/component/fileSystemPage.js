@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import _ from 'lodash';
-import {Navbar, Nav, Button, NavItem, Table, Modal} from 'react-bootstrap';
+import {Navbar, Nav, Button, NavItem, Table} from 'react-bootstrap';
 import FileRow from './fileRow';
 const configs = require('../config/config').getconfig();
 

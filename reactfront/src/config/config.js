@@ -1,5 +1,3 @@
-'use strict';
-
 const ip = require("./ip.json");
 
 module.exports.getconfig = function () {
