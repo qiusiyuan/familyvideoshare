@@ -3,8 +3,9 @@ import axios from 'axios';
 import _ from 'lodash';
 import {Navbar, Nav, Button, NavItem, Table, Modal} from 'react-bootstrap';
 import FileRow from './fileRow';
+const configs = require('../config/config').getconfig();
 
-const hostIp = "http://192.168.0.18:10010"
+const hostIp = configs.hostIp;
 class FileSystemPage extends Component {
   constructor(){
     super();

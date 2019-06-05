@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+const configs = require('../config/config').getconfig();
 
-const hostIp = "http://192.168.0.18:10010";
+const hostIp = configs.hostIp;
 class Player extends Component {
   render(){
     var videoPath = this.props.params.path

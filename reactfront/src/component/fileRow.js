@@ -3,8 +3,9 @@ import {Image, Button} from 'react-bootstrap';
 var path = require('path');
 var filePic = require('../pic/file.jpg');
 var folderPic = require('../pic/folder.jpeg');
+const configs = require('../config/config').getconfig();
 
-const hostIp = "http://192.168.0.18:10010"
+const hostIp = configs.hostIp;
 class FileRow extends Component{
   render(){
     const fileMeta = this.props.fileMeta
